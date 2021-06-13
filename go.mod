@@ -1,3 +1,3 @@
-module tardis/go_demo
+module tardis/demo
 
 go 1.15

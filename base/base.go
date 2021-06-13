@@ -64,8 +64,8 @@ func init() {
 	i1 = 12
 }
 
-// main 方法
-func main1() {
+// Base 方法
+func Base() {
 	//f(1)
 	//a := uint(10)
 	//fmt.Println(a)

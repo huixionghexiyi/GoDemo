@@ -10,7 +10,8 @@ func adder() func(int) int {
 	}
 }
 
-func main7() {
+// Closure 闭包
+func Closure() {
 	pos, neg := adder(), adder()
 	for i := 0; i < 2; i++ {
 		fmt.Println(

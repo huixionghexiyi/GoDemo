@@ -6,7 +6,7 @@ type point1 struct {
 	X int
 	Y int
 }
-func main6() {
+func Map() {
 	m := map[string]string{}
 	m["name"] = "huixiong"
 	m["gender"] = "male"

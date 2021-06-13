@@ -2,7 +2,8 @@ package main
 
 import "fmt"
 
-func main4() {
+// Array 数组
+func Array() {
 	var a [10]int
 	b := [5]int{1, 2, 3}
 	c := []int{1, 2, 3}

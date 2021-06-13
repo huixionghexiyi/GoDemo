@@ -13,7 +13,7 @@ func (v Vertex) Abs() int {
 	return v.X
 }
 
-func main() {
+func Oop() {
 	v := Vertex{1, 2}
 	abs := v.Abs()
 	fmt.Print(abs)

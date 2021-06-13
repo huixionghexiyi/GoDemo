@@ -2,7 +2,8 @@ package main
 
 import "fmt"
 
-func main5() {
+// Silce 切片
+func Slice() {
 	arr := [5]int{1, 2, 3, 4, 5}
 	v := arr[1:3]
 	fmt.Println(v)
