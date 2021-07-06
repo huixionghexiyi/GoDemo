@@ -5,11 +5,11 @@ import (
 	"time"
 )
 
-func main() {
+func GoRoutineDemo() {
 	go spinner(100 * time.Millisecond)
-	const n = 45
-	fibN := fib(n) // slow
-	fmt.Printf("\rFibonacci(%d) = %d\n", n, fibN) // 主程序终止 导致 goroutine终止
+	n := 45
+	fibN := fib(n)
+	fmt.Printf("\rfib(%d) = %d\n", n, fibN)
 }
 
 func spinner(delay time.Duration) {
