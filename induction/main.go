@@ -1,22 +1,10 @@
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-)
+import "fmt"
 
 func main() {
-	counts := make(map[string]int)
-	input := bufio.NewScanner(os.Stdin)
+	var f float32 = 16777216
 
-	for input.Scan() {
-		counts[input.Text()]++
-	}
+	fmt.Println(f,f+1)
 
-	for line, n := range counts {
-		if n > 1 {
-			fmt.Printf("%d\t%s\n", n, line)
-		}
-	}
 }

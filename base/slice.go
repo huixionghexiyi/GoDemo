@@ -2,9 +2,9 @@ package main
 
 import "fmt"
 
-// Silce 切片
+// Slice 切片
 func Slice() {
-	arr := [5]int{1, 2, 3, 4, 5}
+	arr := [5]int{1:1, 0:2, 2:23, 4:4}
 	v := arr[1:3]
 	fmt.Println(v)
 	fmt.Println(len(v),cap(arr))
@@ -13,4 +13,6 @@ func Slice() {
 	fmt.Println([]int{})
 
 	fmt.Print(append(v, 4))
+	var arr1 *[]int
+	print(arr1)
 }
