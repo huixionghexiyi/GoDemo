@@ -1,41 +1,45 @@
-package handler
+package main
 
 import (
 	"net/http"
-	"tardis_web3/context"
-	"tardis_web3/route"
 )
 
 // Handler 使用组合 扩展 http.Handler 方法
 type Handler interface {
-	http.Handler
-	route.Routable
+	ServeHTTP(c *Context)
+	Routable
 }
 
 type MapHandler struct {
-	Handlers map[string]func(c context.AbstractContext)
+	Handlers map[string]func(c *Context)
 }
 
 // ServeHTTP 实现 Handler 接口
-func (h *MapHandler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
-	key := h.Key(req.Method, req.URL.Path)
+func (h *MapHandler) ServeHTTP(c *Context) {
+	key := h.key(c.R.Method, c.R.URL.Path)
 
+	// 如果找到路由就执行
 	if handler, ok := h.Handlers[key]; ok {
-		c := context.NewContext(writer, req)
 		handler(c)
 	} else {
-		writer.WriteHeader(http.StatusNotFound)
-		writer.Write([]byte("not any router match"))
+		c.W.WriteHeader(http.StatusNotFound)
+		c.W.Write([]byte("not any router match"))
 	}
 }
 
-func (h *MapHandler) Route(method, pattern string, handlerFunc func(c context.AbstractContext)) {
-	key := h.Key(method, pattern)
+func (h *MapHandler) Route(method, pattern string, handlerFunc func(c *Context)) {
+	key := h.key(method, pattern)
 	h.Handlers[key] = handlerFunc
 }
 
-func (h *MapHandler) Key(method, pattern string) string {
+func (h *MapHandler) key(method, pattern string) string {
 	return method + "&" + pattern
+}
+
+func NewMapHandler() Handler {
+	return &MapHandler{
+		Handlers: make(map[string]func(c *Context)),
+	}
 }
 
 var _ Handler = &MapHandler{}

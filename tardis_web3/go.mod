@@ -1,3 +1,3 @@
-module tardis_web2
+module tardis_web3
 
 go 1.15

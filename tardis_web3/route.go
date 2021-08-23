@@ -1,7 +1,5 @@
-package route
-
-import "tardis_web3/context"
+package main
 
 type Routable interface {
-	Route(method, pattern string, handlerFunc func(c context.AbstractContext))
+	Route(method, pattern string, handlerFunc func(c *Context))
 }

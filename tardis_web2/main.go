@@ -4,31 +4,30 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"tardis_web/context"
-	web "tardis_web/server"
-	"tardis_web/sign"
+	"tardis_web2/context"
+	web "tardis_web2/server"
+	"tardis_web2/sign"
 )
 
 func main() {
 	server := web.NewSdkHttpServer("test_web")
-	server.Route("/", handler)
-	server.Route("/user", user)
-	server.Route("/sign", signUp)
+	//server.Route("/", handler)
+	server.Route("GET", "/user", user)
+	server.Route("GET", "/sign", signUp)
 	log.Fatal(server.Start("8080"))
 
 }
 
-func user(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi, this is home page")
+func user(c context.AbstractContext) {
+	c.WriteJson(http.StatusCreated, "Hi, this is home page")
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+func handler(c context.AbstractContext) {
+	c.WriteJson(200, "Hi there, I love %s!")
 }
 
-func signUp(w http.ResponseWriter, r *http.Request) {
+func signUp(c context.AbstractContext) {
 	req := &sign.SignUpReq{}
-	c := context.NewContext(w, r)
 	err := c.ReadJson(req)
 
 	if err != nil {
@@ -45,4 +44,3 @@ func signUp(w http.ResponseWriter, r *http.Request) {
 		Data:    123,
 	})
 }
-
