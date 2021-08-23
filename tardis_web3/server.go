@@ -2,9 +2,9 @@ package server
 
 import (
 	"net/http"
-	"tardis_web2/context"
-	"tardis_web2/handler"
-	"tardis_web2/route"
+	"tardis_web3/context"
+	"tardis_web3/handler"
+	"tardis_web3/route"
 )
 
 type Server interface {
