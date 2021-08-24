@@ -1,15 +1,10 @@
-package context
+package main
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 )
-
-type AbstractContext interface {
-	ReadJson(data interface{}) error
-	WriteJson(status int, data interface{}) error
-}
 
 type Context struct {
 	W http.ResponseWriter
@@ -37,11 +32,9 @@ func (c *Context) WriteJson(status int, data interface{}) error {
 	return nil
 }
 
-func NewContext(w http.ResponseWriter, r *http.Request) AbstractContext {
+func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	return &Context{
 		W: w,
 		R: r,
 	}
 }
-
-var _ AbstractContext = &Context{}

@@ -2,12 +2,15 @@ package server
 
 import (
 	"net/http"
+	"tardis_web2/context"
+	"tardis_web2/handler"
+	"tardis_web2/route"
 )
 
 type Server interface {
 
-	// Route 设定一个路由，命中该路由的会执行handlerFunc的代码
-	Route(pattern string, handlerFunc http.HandlerFunc)
+	// Routable 设定一个路由，命中该路由的会执行handlerFunc的代码
+	route.Routable
 
 	// Start 启动我们的服务器
 	Start(address string) error
@@ -17,18 +20,30 @@ type Server interface {
 type sdkHttpServer struct {
 	// Name server 的名字，给个标记，日志输出的时候用得上
 	Name string
+
+	// handler 依赖于接口
+	handler handler.Handler
 }
 
-func (s *sdkHttpServer) Route(pattern string, handlerFunc http.HandlerFunc) {
-	http.HandleFunc(pattern, handlerFunc)
+func (s *sdkHttpServer) Route(method, pattern string, handlerFunc func(c context.AbstractContext)) {
+	// 直接调用 handler 的 Route 方法
+	s.handler.Route(method, pattern, handlerFunc)
 }
 
 func (s *sdkHttpServer) Start(address string) error {
-	return http.ListenAndServe(":"+address, nil)
+
+	return http.ListenAndServe(":"+address, s.handler)
 }
 
+// NewSdkHttpServer 创建一个SdkHttpServer 对象
 func NewSdkHttpServer(name string) Server {
+	handler := &handler.MapHandler{
+		Handlers: make(map[string]func(c context.AbstractContext)),
+	}
 	return &sdkHttpServer{
-		Name: name,
+		Name:    name,
+		handler: handler,
 	}
 }
+
+var _ Server = &sdkHttpServer{}
