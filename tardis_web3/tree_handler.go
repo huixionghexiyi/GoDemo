@@ -29,32 +29,39 @@ func (n *node) findMatchChild(path string) (*node, bool) {
 	return nil, false
 }
 
+// findMatchChild2 增加通配符匹配
+func (n *node) findMatchChild2(path string) (*node, bool) {
+	panic("TODO me")
+}
+
+// findMatchChild2 增加变量匹配
+func (n *node) findMatchChild3(path string) (*node, bool) {
+	panic("TODO me")
+}
+
 // ServeHTTP 可以抽出一个 findRouter 方法
 func (h *TreeHandler) ServeHTTP(c *Context) {
-	url := strings.Trim(c.R.URL.Path, "/")
-	paths := strings.Split(url, "/")
-	curr := h.root
-	for _, path := range paths {
-		child, found := curr.findMatchChild(path)
 
-		// 在某一个父节点没找找到，直接 返回404
-		if !found {
-			c.W.WriteHeader(http.StatusNotFound)
-			_, _ = c.W.Write([]byte("Not Found"))
-			return
-		}
-		curr = child
-	}
-
-	// 如果路由的方法为 nil ，也相当于没有找到
-	if curr.handler == nil {
+	router, found := h.findRouter(c.R.URL.Path)
+	if !found {
 		c.W.WriteHeader(http.StatusNotFound)
-		c.W.Write([]byte("Not found"))
+		c.W.Write([]byte("Not Found"))
 		return
 	}
+	router.handler(c)
+}
 
-	curr.handler(c)
-
+func (h *TreeHandler) findRouter(path string) (*node, bool) {
+	paths := strings.Split(strings.Trim(path, "/"), "/")
+	curr := h.root
+	for _, p := range paths {
+		matchChild, found := curr.findMatchChild(p)
+		if !found {
+			return nil, false
+		}
+		curr = matchChild
+	}
+	return curr, true
 }
 
 // Route 路由
