@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type HandlerBaseOnTree struct {
+type TreeHandler struct {
 	root *node
 }
 
@@ -30,7 +30,7 @@ func (n *node) findMatchChild(path string) (*node, bool) {
 }
 
 // ServeHTTP 可以抽出一个 findRouter 方法
-func (h *HandlerBaseOnTree) ServeHTTP(c *Context) {
+func (h *TreeHandler) ServeHTTP(c *Context) {
 	url := strings.Trim(c.R.URL.Path, "/")
 	paths := strings.Split(url, "/")
 	curr := h.root
@@ -57,7 +57,8 @@ func (h *HandlerBaseOnTree) ServeHTTP(c *Context) {
 
 }
 
-func (h *HandlerBaseOnTree) Route(method, pattern string, handlerFunc handlerFunc) {
+// Route 路由
+func (h *TreeHandler) Route(method, pattern string, handlerFunc handlerFunc) {
 	pattern = strings.Trim(pattern, "/")
 	paths := strings.Split(pattern, "/")
 
@@ -76,7 +77,8 @@ func (h *HandlerBaseOnTree) Route(method, pattern string, handlerFunc handlerFun
 	curr.handler = handlerFunc
 }
 
-func (h *HandlerBaseOnTree) createSubTree(root *node, paths []string, f handlerFunc) {
+// createSubTree 创建子树
+func (h *TreeHandler) createSubTree(root *node, paths []string, f handlerFunc) {
 	curr := root
 
 	// 遍历传进来的参数，不停的创建子节点，直到创建完成后，将 f 赋值给 curr.handler
@@ -88,9 +90,16 @@ func (h *HandlerBaseOnTree) createSubTree(root *node, paths []string, f handlerF
 	curr.handler = f
 }
 
+// newNode 新建一个节点
 func newNode(path string) *node {
 	return &node{
 		path:     path,
 		children: make([]*node, 0, 2),
+	}
+}
+
+func NewTreeHandler() *TreeHandler {
+	return &TreeHandler{
+		root: &node{},
 	}
 }

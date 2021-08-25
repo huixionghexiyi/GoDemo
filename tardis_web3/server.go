@@ -19,8 +19,10 @@ type sdkHttpServer struct {
 	Name string
 
 	// handler 依赖于接口
-	handler Handler
+	// handler Handler
 
+	// handler 路由树
+	handler *TreeHandler
 	//
 	root Filter
 }
@@ -41,10 +43,13 @@ func (s *sdkHttpServer) Start(address string) error {
 
 // NewSdkHttpServer 创建一个SdkHttpServer 对象
 func NewSdkHttpServer(name string, builders ...FilterBuilder) Server {
-	handler := NewMapHandler()
+
+	// handler := NewMapHandler()
+	handler := NewTreeHandler()
 
 	// 因为是一个链，所以把最后的业务逻辑处理，也做为一环
 	var root Filter = handler.ServeHTTP
+
 
 	// 从后往前，把所有的filter串起来
 	for i := len(builders) - 1; i >= 0; i-- {
@@ -59,5 +64,6 @@ func NewSdkHttpServer(name string, builders ...FilterBuilder) Server {
 	}
 
 }
+
 
 var _ Server = &sdkHttpServer{}
